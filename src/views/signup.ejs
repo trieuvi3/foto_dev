@@ -8,6 +8,8 @@
     <div class="email error"></div>
     <label for="password">Password</label>
     <input type="password" name="password" required />
+    <label for="confirmPassword">Password confirmation</label>
+    <input type="password" name="confirmPassword" required />
     <div class="password error"></div>
     <button>Sign up</button>
 </form>
@@ -26,7 +28,14 @@
 
         const email = form.email.value;
         const password = form.password.value;
-        console.log(email, password);
+        const confirmPassword = form.confirmPassword.value;
+
+        // confirm that user typed same password twice
+        if (password !== confirmPassword) {
+            let err = 'Passwords do not match.';
+            passwordError.textContent = err;
+            return;
+        }
         try {
             const res = await fetch('/signup', {
                 method: 'POST',
@@ -35,7 +44,6 @@
             });
 
             const data = await res.json();
-            console.log(data.errors);
             if(data.errors) {
                 emailError.textContent = data.errors.email;
                 passwordError.textContent = data.errors.password;
