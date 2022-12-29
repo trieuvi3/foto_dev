@@ -1,23 +1,39 @@
-<%- include('partials/header'); -%>
+<%- include('../partials/header'); -%>
 
 <form>
-  <h2>Sign up</h2>
+  <h2>Edit User</h2>
+  <input
+    type="text"
+    name="id"
+    value="<%= user.id %>"
+    required
+    style="display: none"
+  />
   <label for="firstname">First Name</label>
-  <input type="text" name="firstname" required />
+  <input type="text" name="firstname" value="<%= user.firstname %>" required />
   <div class="firstname error"></div>
   <label for="lastname">Last Name</label>
-  <input type="text" name="lastname" required />
+  <input type="text" name="lastname" value="<%= user.lastname %>" required />
   <div class="lastname error"></div>
   <label for="email">Email</label>
-  <input type="text" name="email" required />
+  <input type="text" name="email" value="<%= user.email %>" required disabled />
   <div class="email error"></div>
   <label for="password">Password</label>
-  <input type="password" name="password" required />
+  <input
+    type="password"
+    name="password"
+    value="<%= user.password %>"
+    required
+  />
   <div class="password error"></div>
-  <label for="confirmPassword">Password confirmation</label>
-  <input type="password" name="confirmPassword" required />
-  <div class="confirmPassword error"></div>
-  <button>Sign up</button>
+  <input
+    class="form-user-check-input"
+    type="checkbox"
+    name="flagActived"
+    value="<%= user.flagActived %>"
+    id="checkbox-user"
+  />
+  <button>Chỉnh sửa</button>
 </form>
 
 <script>
@@ -26,39 +42,43 @@
   const passwordError = document.querySelector(".password.error");
   const firstnameError = document.querySelector(".firstname.error");
   const lastnameError = document.querySelector(".lastname.error");
+  var flagActived = form.flagActived.value;
+
+  if (flagActived == 1) {
+    $("#checkbox-user").prop("checked", true);
+  } else {
+    $("#checkbox-user").prop("checked", false);
+  }
+
+  $('#checkbox-user').change(function(){
+      let checkFlagActived = $("#checkbox-user").prop("checked");
+      flagActived = checkFlagActived === true ? 1 : 0;
+    });
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-
     //reset the values
     firstnameError.textContent = "";
     lastnameError.textContent = "";
-    emailError.textContent = "";
     passwordError.textContent = "";
 
     const firstname = form.firstname.value;
     const lastname = form.lastname.value;
     const email = form.email.value;
     const password = form.password.value;
-    const confirmPassword = form.confirmPassword.value;
     const role = 1;
-    // confirm that user typed same password twice
-    if (password !== confirmPassword) {
-      let err = "Passwords do not match.";
+    const id = form.id.value;
+
+    if (password.length < 6) {
+      let err = "Minimum password length is 6 characters";
       passwordError.textContent = err;
       return;
     }
+
     try {
-      const res = await fetch("/signup", {
-        method: "POST",
-        body: JSON.stringify({
-          firstname,
-          lastname,
-          email,
-          password,
-          role,
-          confirmPassword,
-        }),
+      const res = await fetch(`/edit-user/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({ firstname, lastname, email, password, role, flagActived }),
         headers: { "Content-Type": "application/json" },
       });
 
@@ -66,16 +86,14 @@
       if (data.errors) {
         firstnameError.textContent = data.errors.firstname;
         lastnameError.textContent = data.errors.lastname;
-        emailError.textContent = data.errors.email;
         passwordError.textContent = data.errors.password;
       }
       if (data.user) {
-        location.assign("/login");
+        location.assign("/manages/users/details");
       }
     } catch (error) {
       console.log(error);
     }
   });
 </script>
-
-<%- include('partials/footer'); -%>
+<%- include('../partials/footer'); -%>

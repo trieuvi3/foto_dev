@@ -1,0 +1,20 @@
+<%- include('../partials/header'); -%>
+
+<div class="container photo-container">
+    <% photos.forEach(function(photo){ %>
+    <div class="photos__detail">
+        <img class="photo-img" src="../../images/<%= photo.image %>" alt=">
+        <div class="photos__detail__overlay">
+            <div class="photos__detail__content justify-content-between">
+                <div><%= photo.title %></div>
+                <div class="photo-btn"><a href="/photos/edit/<%= photo._id %>">X</a></div>
+            </div>
+        </div>
+        <% if(photo.sharemode === 1) {%>
+        <div class="rapper-icon">
+            <img class="photo-icon" src="../../images/d682a480-a5ae-11ea-806d-519d39d18e32.png" alt="" width="16px" height="16px">
+        </div>
+        <% } %>
+    </div>
+    <% }); %>
+</div>

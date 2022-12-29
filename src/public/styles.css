@@ -137,3 +137,80 @@ footer{
   margin-top: 120px;
   color: #aaa;
 }
+
+.photo-container {
+  display: flex;
+}
+.photos__detail{
+  width: 200px;
+  height: 200px;
+  padding-left: 10px;
+  position: relative;
+
+}
+
+.photos__detail .photo-img {
+  height: 100%;
+  width: 100%;
+}
+
+ .photos__detail .photos__detail__overlay {
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.photos__detail .photos__detail__content {
+  /* background: black;
+  position: absolute;
+  top: 3%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  opacity: 0.5;
+  width: 100%;
+  display: flex; */
+  display: flex;
+  font-size: 14px;
+  width: 90%;
+}
+
+.photos__detail .photo-btn {
+  margin: 0;
+  padding: 0;
+}
+
+.photos__detail .rapper-icon {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+}
+.upload__file {
+  position: relative;
+}
+.upload__file--delete {
+  position: absolute;
+  right: 0;
+  top: -5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.upload__file-label {
+  width: 200px;
+  height: 200px;
+}
+.upload__file img {
+  width: 100%;
+  cursor: pointer;
+  height: 200px;
+  object-fit: cover;
+}
+
+.upload__file--text {
+  display: block;
+  height: 200px;
+  width: 100%;
+  cursor: pointer;
+}

@@ -1,0 +1,92 @@
+<%- include('../../partials/header'); -%>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">First Name</th>
+      <th scope="col">Last name</th>
+      <th scope="col">Email</th>
+      <th scope="col" colspan="2" id="hide">Last login</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% users.forEach(function(user, index){ %>
+    <tr>
+      <th scope="row"><%= index+1 %></th>
+      <td><%= user.firstname %></td>
+      <td><%= user.lastname %></td>
+      <td><%= user.email %></td>
+      <td>
+        <a href="/edit-user/<%= user._id %>" class="btn btn-link">Edit</a>
+        <a
+          class="btn btn-link"
+          data-id="<%= user._id %>"
+          data-toggle="modal"
+          data-target="#delete-user-model"
+          >Delete</a
+        >
+      </td>
+    </tr>
+    <% }); %>
+  </tbody>
+
+  <!--Cofrim delete user -->
+  <div
+    class="modal fade"
+    id="delete-user-model"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="deleteUserLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteUserLabel">Delete user</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">Are you sure to delete this user?</div>
+        <div class="modal-footer">
+          <button id="btn-delete-user" type="button" class="btn btn-danger">
+            Delete
+          </button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Delete hidden form -->
+  <form name="delete-user-form" method="PUT"></form>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var btnDeleteUser = document.getElementById("btn-delete-user");
+      var deleteForm = document.forms["delete-user-form"];
+      var userId;
+      // user item checkbox changed
+      $("#delete-user-model").on("show.bs.modal", function (event) {
+        var button = $(event.relatedTarget);
+        userId = button.data("id");
+      });
+
+      btnDeleteUser.onclick = async function () {
+        const res = await fetch(`/delete-user/${userId}`, {
+          method: "PUT",
+          body: JSON.stringify({ id: userId }),
+          headers: { "Content-Type": "application/json" },
+        });
+
+        location.assign("/manages/users/details");
+      };
+    });
+  </script>
+</table>

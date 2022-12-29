@@ -1,0 +1,118 @@
+<%- include('../partials/header'); -%>
+
+<form action="/photos/update/<%= photo._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+  <h2>Edit Photo</h2>
+  <label for="title">Title</label>
+  <input type="text" name="title" required value="<%= photo.title%>"/>
+  <div class="title error"></div>
+  <div class="form-group">
+    <label for="sharemode">Sharing mode</label>
+    <select class="form-control" name="sharemode">
+      <% if(photo.sharemode === 1){ %>
+      <option value="1" selected>Public</option>
+      <option value="2">Private</option>
+      <% } else {%>
+        <option value="1">Public</option>
+        <option value="2" selected>Private</option>
+      <% } %>
+    </select>
+  <div class="sharemode error"></div>
+  <label >Image</label>
+  <div class="upload__file">
+    <div class="upload__file--delete" onclick="getClick()">X</div>
+    <label name="upload__file-label">
+      <img id="upload__file--img" src="../../images/<%= photo.image %>" alt=""  for="firsting">
+      <label for="firsting" class="upload__file--text" style="display: none;">+</label>
+    </label>
+    <input type="file" id="firsting" name="image" value="<%= photo.image %>" style="display: none; visibility: none;" />
+    <div id="display-image"></div>
+    <div class="image error"></div>
+</div>
+  <label for="description">Description</label>
+  <textarea id="w3review" name="description" rows="4" cols="31"><%= photo.description %></textarea>
+  <div class="description error"></div>
+  <input type="text" name="userId" value="<%=user._id%>" class="d-none" />
+  <button>Save</button>
+  <div>
+    <a 
+    class="btn btn-link"
+    data-id="<%= photo._id %>"
+    data-toggle="modal"
+    data-target="#delete-photo-model"
+    >Delete</a></div>
+</form>
+
+<!--Cofrim delete photo -->
+<div
+class="modal fade"
+id="delete-photo-model"
+tabindex="-1"
+role="dialog"
+aria-labelledby="deletePhotoLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="deletePhotoLabel">Delete photo</h5>
+      <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">Are you sure to delete this photo?</div>
+    <div class="modal-footer">
+      <button id="btn-delete-photo" type="button" class="btn btn-danger">
+        Delete
+      </button>
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Delete hidden form -->
+<form name="delete-photo-form" method="POST"></form>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function(){
+    var photoId;
+    var deleteForm = document.forms['delete-photo-form'];
+    var btnDeletePhoto = document.getElementById('btn-delete-photo');
+
+    // user item checkbox changed
+    $("#delete-photo-model").on("show.bs.modal", function (event) {
+      var button = $(event.relatedTarget);
+      photoId = button.data("id");
+    });
+
+    btnDeletePhoto.onclick = function() {
+      deleteForm.action = '/photos/delete/'+photoId+'?_method=PUT';
+      deleteForm.submit();
+    };
+
+  });
+
+const file = document.querySelector("#firsting");
+file.addEventListener("change", function() {
+  $(".upload__file--text").css("display", "none");
+  $("#upload__file--img").css("display", "block");
+  $(".upload__file--delete").css("display", "block");
+  const reader = new FileReader();
+  reader.addEventListener("load", () => {
+    document.querySelector("#upload__file--img").src = reader.result
+  })
+  reader.readAsDataURL(this.files[0]);
+});
+function getClick() {
+  $("#upload__file--img").css("display", "none");
+  $(".upload__file--delete").css("display", "none");
+  $(".upload__file--text").css("display", "block");
+}
+</script>

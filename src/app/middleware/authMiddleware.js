@@ -10,7 +10,7 @@ const requireAuth = (req, res, next) => {
             if(err) {
                 res.redirect('/login');
             } else {
-                console.log("decodedToken ",decodedToken);
+                // console.log("decodedToken ",decodedToken);
                 next();
             }
         })
@@ -26,11 +26,11 @@ const checkUser = (req, res, next) => {
     if(token) {
         jwt.verify(token, 'Foto book serect', async (err, decodedToken) =>{
             if (err) {
-                console.log(err);
+                // console.log(err);
                 res.locals.user = null;
                 next();
             } else {
-                console.log(decodedToken);
+                // console.log(decodedToken);
                 let user = await User.findById(decodedToken.id);
                 res.locals.user = user;
                 next();
